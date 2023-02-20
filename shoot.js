@@ -73,7 +73,7 @@ AFRAME.registerComponent("bullets", {
        element_hit.setAttribute("material",{
         opacity:1,
         transparent:true,
-        color:"Black"
+        color:Math.random(0,255)
        })
 
        
