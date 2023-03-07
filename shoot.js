@@ -31,81 +31,71 @@ AFRAME.registerComponent("bullets", {
         camera.getWorldDirection(direction);
 
         //set the velocity and it's direction
-        bullet.setAttribute("velocity", direction.multiplyScalar(-20));
+        bullet.setAttribute("velocity", direction.multiplyScalar(-10));
 
         var scene = document.querySelector("#scene");
 
-        //set the bullet as the dynamic entity
-        bullet.setAttribute("dynamic-body", {
-          shape: "sphere",
-          mass: "0",
-        });
-        bullet.setAttribute("visible", false);
+        bullet.setAttribute("dynamic-body",{
+          shape:"sphere",
+          mass:0,
 
-        //add the collide event listener to the bullet
-        bullet.addEventListener("collide", this.removeBullet);
+        })
+        
+        bullet.addEventListener("collide",this.removeBullet)
 
         scene.appendChild(bullet);
 
-        //shooting sound
-        this.shootSound();
+        this.shootSound()
       }
     });
   },
+
   removeBullet: function (e) {
-    var scene = document.querySelector("#scene");
+    //Original entity (bullet) 
+    console.log(e.detail.target.el);
+
+    //Other entity, which bullet touched.
+    console.log(e.detail.body.el);
+
+    var element=e.detail.target.el
+    var element_hit=e.detail.body.el
+
+    
     //bullet element
-    var element = e.detail.target.el;
+
 
     //element which is hit
-    var elementHit = e.detail.body.el;
+ 
 
-    //Create paint splash
-    var paint = document.createElement("a-entity");
-    var pos = element.getAttribute("position")
-    var rotate = elementHit.getAttribute("rotation")
+    if (element_hit.id.includes("wall")) 
+      {
+        //set material attribute
+       element_hit.setAttribute("material",{
+        opacity:1,
+        transparent:true,
+        color:Math.random(0,255)
+       })
 
-    paint.setAttribute("position", {
-      x: pos.x,
-      y: pos.y,
-      z: pos.z,
-    });
-    paint.setAttribute("rotation", {
-      x: rotate.x,
-      y: rotate.y,
-      z: rotate.z,
-    });
-    paint.setAttribute("scale", {
-      x: 2,
-      y: 2,
-      z: 2,
-    });
+       
+        //impulse and point vector
+        var impulse=new CANNON.Vec3(-2,2,1);
+        var worldpoint=new CANNON.Vec3().copy(element_hit.getAttribute("position"))
+        element_hit.body.applyImpulse(impulse,worldpoint)
 
+        
 
-    var colorNum = parseInt(Math.random() * 8 + 1)
-
-    paint.setAttribute("material", {
-      opacity: 1,
-      transparent: true,
-      src: "./images/paint splash-0" + colorNum + ".png"
-    });
-
-    paint.setAttribute("geometry", {
-      primitive: "plane",
-      width: 0.5,
-      height: 0.5
-    });
-    scene.appendChild(paint)
-
-    //remove event listener
-    element.removeEventListener("collide", this.removeBullet);
-
-    //remove the bullets from the scene      
-    scene.removeChild(element);
+        //remove event listener
+        
+        
+        //remove the bullets from the scene
+      
+    }
   },
-  shootSound: function () {
-    var entity = document.querySelector("#sound1");
-    entity.components.sound.playSound();
-  },
+
+  shootSound:function(){
+    var entity=document.querySelector("#sound1")
+    entity.components.sound.playSound()
+  }
 });
+
 
