@@ -22,7 +22,7 @@ AFRAME.registerComponent("bullets", {
          bullet.setAttribute("visible", false); 
           bullet.addEventListener("collide", this.removeBullet);
            scene.appendChild(bullet); 
-           this.shootSound(); } }); }, 
+          ; } }); }, 
            
            removeBullet: function (e) {
              var scene = document.querySelector("#scene"); 
