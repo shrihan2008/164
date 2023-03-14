@@ -13,7 +13,7 @@ AFRAME.registerComponent("bullets", {
 
         bullet.setAttribute("geometry", {
           primitive: "sphere",
-          radius: 0.1,
+          radius:0.3,
         });
 
         bullet.setAttribute("material", "color", "black");
